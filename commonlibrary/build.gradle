@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+
+def config = rootProject.ext.androidVersion
+def des = rootProject.ext.supportDes
+
+android {
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
+    defaultConfig {
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [AROUTER_MODULE_NAME: project.getName()]
+                includeCompileClasspath = true
+            }
+        }
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation des.appcompat
+    testImplementation rootProject.ext.testDes["junit"]
+    androidTestImplementation rootProject.ext.testDes["androidTest"]
+    androidTestImplementation rootProject.ext.testDes["espresso"]
+
+
+    api rootProject.ext.appDes["Arouter_api"]
+    annotationProcessor rootProject.ext.appDes["Arouter_compiler"]
+
+}

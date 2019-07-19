@@ -1,0 +1,54 @@
+apply plugin: 'com.android.application'
+
+def config = rootProject.ext.androidVersion
+def des = rootProject.ext.supportDes
+
+android {
+    compileSdkVersion config.compileSdkVersion
+    buildToolsVersion config.buildToolsVersion
+    defaultConfig {
+        applicationId config.applicationId
+        minSdkVersion config.minSdkVersion
+        targetSdkVersion config.targetSdkVersion
+        versionCode config.versionCode
+        versionName config.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = [modelName: project.getName()]
+                includeCompileClasspath = true
+            }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation des.appcompat
+    implementation des.constraintlayout
+    testImplementation rootProject.ext.testDes["junit"]
+    androidTestImplementation rootProject.ext.testDes["androidTest"]
+    androidTestImplementation rootProject.ext.testDes["espresso"]
+    implementation project(path: ':commonlibrary')
+    implementation des["design"]
+    if (!isHomeModel.toBoolean()){
+        implementation project(':home')
+
+    }
+    if (!isFindModel.toBoolean()){
+        implementation project(':find')
+
+    }
+    if (!isMineModel.toBoolean()){
+        implementation project(':mine')
+    }
+
+}
